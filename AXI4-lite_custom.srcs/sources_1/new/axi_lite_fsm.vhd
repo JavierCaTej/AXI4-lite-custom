@@ -1,0 +1,19 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: Javier Carmona Tejero
+-- 
+-- Create Date: 08/21/2025 08:04:55 PM
+-- Design Name: 
+-- Module Name: axi_lite_fsm - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------

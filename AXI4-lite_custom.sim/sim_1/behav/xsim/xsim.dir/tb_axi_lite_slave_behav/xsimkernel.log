@@ -1,0 +1,4 @@
+Running: xsim.dir/tb_axi_lite_slave_behav/xsimk -simmode gui -wdb tb_axi_lite_slave_behav.wdb -simrunnum 0 -socket 58485
+Design successfully loaded
+Design Loading Memory Usage: 27792 KB (Peak: 27912 KB)
+Design Loading CPU Usage: 30 ms

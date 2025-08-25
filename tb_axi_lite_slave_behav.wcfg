@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_axi_lite_slave_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="axi_lite_slave_regs_pkg" />
+            <top_module name="tb_axi_lite_slave" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="51.890 ns"></ZoomStartTime>
+      <ZoomEndTime time="448.464 ns"></ZoomEndTime>
+      <Cursor1Time time="135.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="120"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="45" />
+   <wave_markers>
+      <marker label="" time="135000" />
+   </wave_markers>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_ACLK">
+      <obj_property name="ElementShortName">S_AXI_ACLK</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_ACLK</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_ARESETN">
+      <obj_property name="ElementShortName">S_AXI_ARESETN</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_ARESETN</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/regs">
+      <obj_property name="ElementShortName">regs</obj_property>
+      <obj_property name="ObjectShortName">regs</obj_property>
+      <obj_property name="CustomSignalColor">#FF0000</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider22" type="divider">
+      <obj_property name="label">ADDRESS WRITE CHANNEL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/aw_hs">
+      <obj_property name="ElementShortName">aw_hs</obj_property>
+      <obj_property name="ObjectShortName">aw_hs</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/S_AXI_AWADDR">
+      <obj_property name="ElementShortName">S_AXI_AWADDR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_AWADDR[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/awaddr_lat">
+      <obj_property name="ElementShortName">awaddr_lat[31:0]</obj_property>
+      <obj_property name="ObjectShortName">awaddr_lat[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/aw_index_lat">
+      <obj_property name="ElementShortName">aw_index_lat[5:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_index_lat[5:0]</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_AWVALID">
+      <obj_property name="ElementShortName">S_AXI_AWVALID</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_AWVALID</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/b_busy">
+      <obj_property name="ElementShortName">b_busy</obj_property>
+      <obj_property name="ObjectShortName">b_busy</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/have_aw">
+      <obj_property name="ElementShortName">have_aw</obj_property>
+      <obj_property name="ObjectShortName">have_aw</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_AWREADY">
+      <obj_property name="ElementShortName">S_AXI_AWREADY</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_AWREADY</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/awready_i">
+      <obj_property name="ElementShortName">awready_i</obj_property>
+      <obj_property name="ObjectShortName">awready_i</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider23" type="divider">
+      <obj_property name="label">WRITE CHANNEL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/w_hs">
+      <obj_property name="ElementShortName">w_hs</obj_property>
+      <obj_property name="ObjectShortName">w_hs</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/S_AXI_WDATA">
+      <obj_property name="ElementShortName">S_AXI_WDATA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WDATA[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/wdata_lat">
+      <obj_property name="ElementShortName">wdata_lat[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wdata_lat[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/S_AXI_WSTRB">
+      <obj_property name="ElementShortName">S_AXI_WSTRB[3:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WSTRB[3:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/wstrb_lat">
+      <obj_property name="ElementShortName">wstrb_lat[3:0]</obj_property>
+      <obj_property name="ObjectShortName">wstrb_lat[3:0]</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/b_busy">
+      <obj_property name="ElementShortName">b_busy</obj_property>
+      <obj_property name="ObjectShortName">b_busy</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/have_w">
+      <obj_property name="ElementShortName">have_w</obj_property>
+      <obj_property name="ObjectShortName">have_w</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_WVALID">
+      <obj_property name="ElementShortName">S_AXI_WVALID</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WVALID</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_WREADY">
+      <obj_property name="ElementShortName">S_AXI_WREADY</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WREADY</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/wready_i">
+      <obj_property name="ElementShortName">wready_i</obj_property>
+      <obj_property name="ObjectShortName">wready_i</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider24" type="divider">
+      <obj_property name="label">RESPONSE WRITE CHANNEL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/S_AXI_BRESP">
+      <obj_property name="ElementShortName">S_AXI_BRESP[1:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_BRESP[1:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_BVALID">
+      <obj_property name="ElementShortName">S_AXI_BVALID</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_BVALID</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/bvalid_i">
+      <obj_property name="ElementShortName">bvalid_i</obj_property>
+      <obj_property name="ObjectShortName">bvalid_i</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_BREADY">
+      <obj_property name="ElementShortName">S_AXI_BREADY</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_BREADY</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider25" type="divider">
+      <obj_property name="label">ADDRESS READ CHANNEL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/S_AXI_ARADDR">
+      <obj_property name="ElementShortName">S_AXI_ARADDR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_ARADDR[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/araddr_lat">
+      <obj_property name="ElementShortName">araddr_lat[31:0]</obj_property>
+      <obj_property name="ObjectShortName">araddr_lat[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/ar_index_lat">
+      <obj_property name="ElementShortName">ar_index_lat[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_index_lat[5:0]</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_ARVALID">
+      <obj_property name="ElementShortName">S_AXI_ARVALID</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_ARVALID</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_ARREADY">
+      <obj_property name="ElementShortName">S_AXI_ARREADY</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_ARREADY</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/arready_i">
+      <obj_property name="ElementShortName">arready_i</obj_property>
+      <obj_property name="ObjectShortName">arready_i</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider26" type="divider">
+      <obj_property name="label">READ CHANNEL</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/S_AXI_RDATA">
+      <obj_property name="ElementShortName">S_AXI_RDATA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_RDATA[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/dut/S_AXI_RRESP">
+      <obj_property name="ElementShortName">S_AXI_RRESP[1:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_RRESP[1:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_RVALID">
+      <obj_property name="ElementShortName">S_AXI_RVALID</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_RVALID</obj_property>
+      <obj_property name="CustomSignalColor">#FAAFBE</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/rvalid_i">
+      <obj_property name="ElementShortName">rvalid_i</obj_property>
+      <obj_property name="ObjectShortName">rvalid_i</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi_lite_slave/dut/S_AXI_RREADY">
+      <obj_property name="ElementShortName">S_AXI_RREADY</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_RREADY</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider27" type="divider">
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi_lite_slave/rd_data">
+      <obj_property name="ElementShortName">rd_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">rd_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_axi_lite_slave/CLK_PERIOD">
+      <obj_property name="ElementShortName">CLK_PERIOD</obj_property>
+      <obj_property name="ObjectShortName">CLK_PERIOD</obj_property>
+   </wvobject>
+</wave_config>
