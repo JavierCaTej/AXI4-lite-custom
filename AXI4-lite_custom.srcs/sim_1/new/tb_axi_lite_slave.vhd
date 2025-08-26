@@ -195,7 +195,10 @@ begin
   -- Estímulos
   -- =========================
   stim : process
-    variable tmp : std_logic_vector(31 downto 0);
+    variable tmp     : std_logic_vector(31 downto 0);
+    variable t_start : std_logic_vector(31 downto 0);
+    variable t_end   : std_logic_vector(31 downto 0);
+    variable t_lat   : std_logic_vector(31 downto 0);
     function off(idx : natural) return std_logic_vector is
     begin
       -- offset = idx * 4 (ADDR[7:2] decode)
@@ -217,12 +220,12 @@ begin
     report "STATUS (after reset) = " &
            integer'image(to_integer(unsigned(tmp)));
 
-    -- (2) Escribir CONTROL=0x00000001 (START=bit0)
+    -- (2) Escribir CONTROL=0x00000003 (START=bit0, MEAS_SEL=bit1)
     axi_write(
       S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
       S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
       S_AXI_BRESP, S_AXI_BVALID, S_AXI_BREADY,
-      off(REG_CONTROL_IDX), x"00000001", "1111"
+      off(REG_CONTROL_IDX), x"00000003", "1111"
     );
 
     -- (3) Leer CONTROL y comprobar
@@ -232,58 +235,53 @@ begin
       off(REG_CONTROL_IDX), tmp
     );
     report "CONTROL = " & integer'image(to_integer(unsigned(tmp)));
-    assert tmp = x"00000001"
-      report "CONTROL != 0x00000001 tras la escritura"
+    assert tmp = x"00000003"
+      report "CONTROL != 0x00000003 tras la escritura"
       severity error;
 
-    -- (4) WSTRB parcial sobre TIME_START (0x08):
-    --     Primero 0xAAAAAAAA, luego sobreescribir 16 LSB con 0x5555 (WSTRB="0011")
-    axi_write(
-      S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
-      S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
-      S_AXI_BRESP, S_AXI_BVALID, S_AXI_BREADY,
-      off(REG_TIME_START_IDX), x"AAAAAAAA", "1111"
+    -- (4) Esperar unos ciclos antes de iniciar la medición
+    wait_clks(5);
+
+    -- (5) Realizar una lectura para disparar la medición RTT
+    axi_read(
+      S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
+      S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
+      off(REG_STATUS_IDX), tmp
     );
-    axi_write(
-      S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
-      S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
-      S_AXI_BRESP, S_AXI_BVALID, S_AXI_BREADY,
-      off(REG_TIME_START_IDX), x"00005555", "0011"
-    );
+
+    -- (6) Leer TIME_START y TIME_END generados por el hardware
     axi_read(
       S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
       S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
       off(REG_TIME_START_IDX), tmp
     );
-    report "TIME_START = " & integer'image(to_integer(unsigned(tmp)));
-    assert tmp = x"AAAA5555"
-      report "WSTRB parcial no aplicado como se esperaba en TIME_START"
-      severity error;
+    t_start := tmp;
 
-    -- (5) Escribir/leer TIME_END (0x0C)
-    axi_write(
-      S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
-      S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
-      S_AXI_BRESP, S_AXI_BVALID, S_AXI_BREADY,
-      off(REG_TIME_END_IDX), x"12345678", "1111"
-    );
     axi_read(
       S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
       S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
       off(REG_TIME_END_IDX), tmp
     );
-    report "TIME_END = " & integer'image(to_integer(unsigned(tmp)));
-    assert tmp = x"12345678"
-      report "TIME_END no coincide tras escritura"
-      severity error;
+    t_end := tmp;
 
-    -- (6) Leer RESULT_LATENCY (0x10) (valor depende de tu lógica)
+    -- (7) Leer RESULT_LATENCY y comprobar coherencia
     axi_read(
       S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
       S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
       off(REG_RESULT_LATENCY_IDX), tmp
     );
-    report "RESULT_LATENCY = " & integer'image(to_integer(unsigned(tmp)));
+    t_lat := tmp;
+
+    report "TIME_START = " & integer'image(to_integer(unsigned(t_start)));
+    report "TIME_END   = " & integer'image(to_integer(unsigned(t_end)));
+    report "LATENCY    = " & integer'image(to_integer(unsigned(t_lat)));
+
+    assert unsigned(t_end) > unsigned(t_start)
+      report "TIME_END no es mayor que TIME_START"
+      severity error;
+    assert unsigned(t_lat) = unsigned(t_end) - unsigned(t_start)
+      report "RESULT_LATENCY != TIME_END - TIME_START"
+      severity error;
 
     report "TB finalizado correctamente" severity note;
     wait_clks(10);
