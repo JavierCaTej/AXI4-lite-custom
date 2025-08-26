@@ -220,7 +220,53 @@ begin
     report "STATUS (after reset) = " &
            integer'image(to_integer(unsigned(tmp)));
 
-    -- (2) Escribir CONTROL=0x00000003 (START=bit0, MEAS_SEL=bit1)
+    -- (2) Escribir patrones de prueba en TIME_START/TIME_END/RESULT_LATENCY
+    axi_write(
+      S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
+      S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
+      S_AXI_BRESP, S_AXI_BVALID, S_AXI_BREADY,
+      off(REG_TIME_START_IDX), x"11111111", "1111"
+    );
+    axi_write(
+      S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
+      S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
+      S_AXI_BRESP, S_AXI_BVALID, S_AXI_BREADY,
+      off(REG_TIME_END_IDX), x"22222222", "1111"
+    );
+    axi_write(
+      S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
+      S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
+      S_AXI_BRESP, S_AXI_BVALID, S_AXI_BREADY,
+      off(REG_RESULT_LATENCY_IDX), x"33333333", "1111"
+    );
+
+    -- (3) Leerlos y verificar que coinciden
+    axi_read(
+      S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
+      S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
+      off(REG_TIME_START_IDX), tmp
+    );
+    assert tmp = x"11111111"
+      report "TIME_START no retuvo el patrón escrito"
+      severity error;
+    axi_read(
+      S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
+      S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
+      off(REG_TIME_END_IDX), tmp
+    );
+    assert tmp = x"22222222"
+      report "TIME_END no retuvo el patrón escrito"
+      severity error;
+    axi_read(
+      S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
+      S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
+      off(REG_RESULT_LATENCY_IDX), tmp
+    );
+    assert tmp = x"33333333"
+      report "RESULT_LATENCY no retuvo el patrón escrito"
+      severity error;
+
+    -- (4) Escribir CONTROL=0x00000003 (START=bit0, MEAS_SEL=bit1)
     axi_write(
       S_AXI_ACLK, S_AXI_AWADDR, S_AXI_AWVALID, S_AXI_AWREADY,
       S_AXI_WDATA, S_AXI_WSTRB, S_AXI_WVALID, S_AXI_WREADY,
@@ -228,7 +274,7 @@ begin
       off(REG_CONTROL_IDX), x"00000003", "1111"
     );
 
-    -- (3) Leer CONTROL y comprobar
+    -- (5) Leer CONTROL y comprobar
     axi_read(
       S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
       S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
@@ -239,17 +285,17 @@ begin
       report "CONTROL != 0x00000003 tras la escritura"
       severity error;
 
-    -- (4) Esperar unos ciclos antes de iniciar la medición
+    -- (6) Esperar unos ciclos antes de iniciar la medición
     wait_clks(5);
 
-    -- (5) Realizar una lectura para disparar la medición RTT
+    -- (7) Realizar una lectura para disparar la medición RTT
     axi_read(
       S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
       S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
       off(REG_STATUS_IDX), tmp
     );
 
-    -- (6) Leer TIME_START y TIME_END generados por el hardware
+    -- (8) Leer TIME_START y TIME_END generados por el hardware
     axi_read(
       S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
       S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
@@ -264,7 +310,7 @@ begin
     );
     t_end := tmp;
 
-    -- (7) Leer RESULT_LATENCY y comprobar coherencia
+    -- (9) Leer RESULT_LATENCY y comprobar coherencia
     axi_read(
       S_AXI_ACLK, S_AXI_ARADDR, S_AXI_ARVALID, S_AXI_ARREADY,
       S_AXI_RDATA, S_AXI_RRESP, S_AXI_RVALID, S_AXI_RREADY,
