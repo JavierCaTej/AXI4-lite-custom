@@ -124,13 +124,13 @@ S_AXI_BVALID  <= bvalid_i;
 S_AXI_RVALID  <= rvalid_i;
 
 -- Decodificacion del indice
-aw_index <= unsigned(S_AXI_AWADDR(7 downto 2));
-ar_index <= unsigned(S_AXI_ARADDR(7 downto 2));
+  aw_index <= unsigned(S_AXI_AWADDR(7 downto 2));
+  ar_index <= unsigned(S_AXI_ARADDR(7 downto 2));
 
 -- Handshakes combinacionales
-aw_hs <= S_AXI_AWVALID and awready_i;
-w_hs  <= S_AXI_WVALID  and wready_i;
-ar_hs <= S_AXI_ARVALID and arready_i;
+  aw_hs <= S_AXI_AWVALID and awready_i;
+  w_hs  <= S_AXI_WVALID  and wready_i;
+  ar_hs <= S_AXI_ARVALID and arready_i;
 
 is_control_write <= '1' when aw_index_lat = REG_CONTROL_IDX else '0';
 
@@ -185,7 +185,7 @@ begin
         if is_control_write = '1' then
           if (wstrb_lat(0) = '1' and wdata_lat(CTRL_START_BIT) = '1') then
             armed       <= '1';
-            measure_rtt <= wdata_lat(CTRL_MODE_BIT);
+            measure_rtt <= wdata_lat(CTRL_MEAS_SEL_BIT);
             status_clear_done_err(regs);
           end if;
         elsif armed = '1' then
@@ -215,19 +215,47 @@ begin
       end if;
 
       -- Completar canal B
-      if (bvalid_i = '1' and S_AXI_BREADY = '1') then
-        if (armed = '1' and measuring_write = '1' and measure_rtt = '1') then
-          regs.time_end       <= std_logic_vector(cyc_cnt);
-          regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
-          status_clr_bit(regs, STAT_BUSY_BIT);
-          status_set_bit(regs, STAT_DONE_BIT);
-          control_clear_start(regs);
-          armed           <= '0';
-          measuring_write <= '0';
+        if (bvalid_i = '1' and S_AXI_BREADY = '1') then
+          if (armed = '1' and measuring_write = '1' and measure_rtt = '1') then
+            regs.time_end       <= std_logic_vector(cyc_cnt);
+            regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
+            status_clr_bit(regs, STAT_BUSY_BIT);
+            status_set_bit(regs, STAT_DONE_BIT);
+            control_clear_start(regs);
+            armed           <= '0';
+            measuring_write <= '0';
+          end if;
+          bvalid_i     <= '0';
+          b_busy       <= '0';
         end if;
-        bvalid_i     <= '0';
-        b_busy       <= '0';
-      end if;
+
+        -- Eventos del canal de lectura para mediciones
+        if ar_hs = '1' then
+          if armed = '1' then
+            regs.time_start <= std_logic_vector(cyc_cnt);
+            status_set_bit(regs, STAT_BUSY_BIT);
+            measuring_write <= '0';
+          end if;
+          if (armed = '1' and measuring_write = '0' and measure_rtt = '0') then
+            regs.time_end       <= std_logic_vector(cyc_cnt);
+            regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
+            status_clr_bit(regs, STAT_BUSY_BIT);
+            status_set_bit(regs, STAT_DONE_BIT);
+            control_clear_start(regs);
+            armed <= '0';
+          end if;
+        end if;
+
+        if (rvalid_i = '1' and S_AXI_RREADY = '1') then
+          if (armed = '1' and measuring_write = '0' and measure_rtt = '1') then
+            regs.time_end       <= std_logic_vector(cyc_cnt);
+            regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
+            status_clr_bit(regs, STAT_BUSY_BIT);
+            status_set_bit(regs, STAT_DONE_BIT);
+            control_clear_start(regs);
+            armed <= '0';
+          end if;
+        end if;
     end if;
   end if;
 end process;
@@ -246,9 +274,6 @@ begin
       r_busy        <= '0';
       S_AXI_RDATA   <= (others => '0');
       araddr_lat  <= (others => '0');
-      armed        <= '0';
-      measure_rtt  <= '0';
-      measuring_write <= '0';
     else
       -- No aceptar otra AR si hay R pendiente
       arready_i <= (not r_busy);
@@ -265,33 +290,9 @@ begin
         S_AXI_RRESP  <= "00"; -- OKAY
         rvalid_i <= '1';
         r_busy       <= '1';
-
-        if armed = '1' then
-          regs.time_start <= std_logic_vector(cyc_cnt);
-          status_set_bit(regs, STAT_BUSY_BIT);
-          measuring_write <= '0';
-        end if;
       end if;
-
-      if (armed = '1' and measuring_write = '0' and measure_rtt = '0' and rvalid_i = '1') then
-        regs.time_end       <= std_logic_vector(cyc_cnt);
-        regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
-        status_clr_bit(regs, STAT_BUSY_BIT);
-        status_set_bit(regs, STAT_DONE_BIT);
-        control_clear_start(regs);
-        armed <= '0';
-      end if;
-
       -- Completar canal R
       if (rvalid_i = '1' and S_AXI_RREADY = '1') then
-        if (armed = '1' and measuring_write = '0' and measure_rtt = '1') then
-          regs.time_end       <= std_logic_vector(cyc_cnt);
-          regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
-          status_clr_bit(regs, STAT_BUSY_BIT);
-          status_set_bit(regs, STAT_DONE_BIT);
-          control_clear_start(regs);
-          armed <= '0';
-        end if;
         rvalid_i <= '0';
         r_busy       <= '0';
       end if;
