@@ -34,7 +34,7 @@ package axi_lite_slave_regs_pkg is
 
   -- control and status 
   constant CTRL_START_BIT : natural := 0;  -- armar medicion
-  constant CTRL_MODE_BIT  : natural := 1;  -- 0=RESP, 1=RTT
+  constant CTRL_MEAS_SEL_BIT  : natural := 1;  -- 0=RESP, 1=RTT
 
   constant STAT_BUSY_BIT  : natural := 0;
   constant STAT_DONE_BIT  : natural := 1;
