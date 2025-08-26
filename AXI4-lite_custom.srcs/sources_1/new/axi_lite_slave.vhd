@@ -110,6 +110,7 @@ signal measure_rtt : std_logic := '0';  -- 0=RESP, 1=RTT
 
 -- Señal interna para saber si la escritura actual es al registro CONTROL
 signal is_control_write : std_logic;
+signal measuring_write : std_logic := '0'; -- 1 si se mide una escritura
 
 begin
 -- ===========================
@@ -130,6 +131,8 @@ ar_index <= unsigned(S_AXI_ARADDR(7 downto 2));
 aw_hs <= S_AXI_AWVALID and awready_i;
 w_hs  <= S_AXI_WVALID  and wready_i;
 ar_hs <= S_AXI_ARVALID and arready_i;
+
+is_control_write <= '1' when aw_index_lat = REG_CONTROL_IDX else '0';
 
 -- ===========================
 -- 2. PROCESS
@@ -153,6 +156,9 @@ begin
       awaddr_lat  <= (others => '0');
       wdata_lat   <= (others => '0');
       wstrb_lat   <= (others => '0');
+      armed        <= '0';
+      measure_rtt  <= '0';
+      measuring_write <= '0';
     else
       -- Back-pressure: si hay B pendiente, no aceptar más nada
       awready_i <= (not b_busy) and (not have_aw);
@@ -176,10 +182,32 @@ begin
       if (have_aw = '1' and have_w = '1' and b_busy = '0') then
         -- ESCRITURA REAL (helper de tu package):
         write_reg_by_index(regs, to_integer(aw_index_lat), wdata_lat, wstrb_lat);
+        if is_control_write = '1' then
+          if (wstrb_lat(0) = '1' and wdata_lat(CTRL_START_BIT) = '1') then
+            armed       <= '1';
+            measure_rtt <= wdata_lat(CTRL_MODE_BIT);
+            status_clear_done_err(regs);
+          end if;
+        elsif armed = '1' then
+          regs.time_start <= std_logic_vector(cyc_cnt);
+          status_set_bit(regs, STAT_BUSY_BIT);
+          measuring_write <= '1';
+        end if;
 
         S_AXI_BRESP  <= "00";      -- OKAY
         bvalid_i     <= '1';
         b_busy       <= '1';
+
+        -- Finalizar medición en modo RESP
+        if (armed = '1' and measuring_write = '1' and measure_rtt = '0') then
+          regs.time_end       <= std_logic_vector(cyc_cnt);
+          regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
+          status_clr_bit(regs, STAT_BUSY_BIT);
+          status_set_bit(regs, STAT_DONE_BIT);
+          control_clear_start(regs);
+          armed           <= '0';
+          measuring_write <= '0';
+        end if;
 
         -- Libero los latches para aceptar la siguiente
         have_aw <= '0';
@@ -188,6 +216,15 @@ begin
 
       -- Completar canal B
       if (bvalid_i = '1' and S_AXI_BREADY = '1') then
+        if (armed = '1' and measuring_write = '1' and measure_rtt = '1') then
+          regs.time_end       <= std_logic_vector(cyc_cnt);
+          regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
+          status_clr_bit(regs, STAT_BUSY_BIT);
+          status_set_bit(regs, STAT_DONE_BIT);
+          control_clear_start(regs);
+          armed           <= '0';
+          measuring_write <= '0';
+        end if;
         bvalid_i     <= '0';
         b_busy       <= '0';
       end if;
@@ -209,6 +246,9 @@ begin
       r_busy        <= '0';
       S_AXI_RDATA   <= (others => '0');
       araddr_lat  <= (others => '0');
+      armed        <= '0';
+      measure_rtt  <= '0';
+      measuring_write <= '0';
     else
       -- No aceptar otra AR si hay R pendiente
       arready_i <= (not r_busy);
@@ -225,10 +265,33 @@ begin
         S_AXI_RRESP  <= "00"; -- OKAY
         rvalid_i <= '1';
         r_busy       <= '1';
+
+        if armed = '1' then
+          regs.time_start <= std_logic_vector(cyc_cnt);
+          status_set_bit(regs, STAT_BUSY_BIT);
+          measuring_write <= '0';
+        end if;
+      end if;
+
+      if (armed = '1' and measuring_write = '0' and measure_rtt = '0' and rvalid_i = '1') then
+        regs.time_end       <= std_logic_vector(cyc_cnt);
+        regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
+        status_clr_bit(regs, STAT_BUSY_BIT);
+        status_set_bit(regs, STAT_DONE_BIT);
+        control_clear_start(regs);
+        armed <= '0';
       end if;
 
       -- Completar canal R
       if (rvalid_i = '1' and S_AXI_RREADY = '1') then
+        if (armed = '1' and measuring_write = '0' and measure_rtt = '1') then
+          regs.time_end       <= std_logic_vector(cyc_cnt);
+          regs.result_latency <= std_logic_vector(cyc_cnt - unsigned(regs.time_start));
+          status_clr_bit(regs, STAT_BUSY_BIT);
+          status_set_bit(regs, STAT_DONE_BIT);
+          control_clear_start(regs);
+          armed <= '0';
+        end if;
         rvalid_i <= '0';
         r_busy       <= '0';
       end if;
